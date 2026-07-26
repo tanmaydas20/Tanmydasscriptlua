@@ -1,238 +1,235 @@
 -- ========================================================================================
---                       SOLARA ALL-IN-ONE COMPREHENSIVE SCRIPT HUB
+--                       SOLARA COMPLETELY ROBUST ALL-IN-ONE BLOX FRUITS HUB
 -- ========================================================================================
--- Click-to-start layout. All core automation tasks start safely turned OFF.
+-- Engineered specifically to remain lightweight enough for Solara execution.
+-- All features default to FALSE (OFF). Click buttons to turn them ON or OFF.
 -- ========================================================================================
 
-if game.CoreGui:FindFirstChild("SolaraUltimateHub") then
-    game.CoreGui.SolaraUltimateHub:Destroy()
+-- Safety check to destroy any previous instance of this hub before loading
+if game.CoreGui:FindFirstChild("SolaraAllInOneHub") then
+    game.CoreGui.SolaraAllInOneHub:Destroy()
 end
 
+-- Core Game Services
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local TweenService = game:GetService("TweenService")
+local LocalPlayer = Players.LocalPlayer
+
+-- Global Feature State Variable Storage Table (Everything defaults strictly to OFF)
+_G.AutoFarmLevel = false; _G.AutoNewWorld = false; _G.AutoMastery = false; _G.AutoBoneFarm = false; _G.AutoCandyFarm = false; _G.FastAttack = false; _G.BringMob = false
+_G.AutoBoss = false; _G.AutoAllBosses = false; _G.AutoSaber = false; _G.AutoPole = false; _G.AutoRengoku = false; _G.AutoYamaTushita = false; _G.AutoCDK = false; _G.AutoSoulGuitar = false; _G.AutoHardQuests = false
+_G.AutoRaid = false; _G.AutoLawRaid = false; _G.AutoAwaken = false; _G.AutoGodhuman = false; _G.AutoKenHaki = false; _G.AutoBusoHaki = false
+_G.FruitSniper = false; _G.AutoBringFruit = false; _G.AutoStoreFruit = false; _G.FruitRandom = false
+_G.TeleportIslands = false; _G.TeleportPlayers = false; _G.BeliFarm = false; _G.ServerHop = false; _G.RejoinServer = false
+_G.PlayerESP = false; _G.ChestESP = false; _G.FruitESP = false; _G.FlowerESP = false
+_G.WalkSpeedValue = 16; _G.JumpPowerValue = 50; _G.InfiniteGeppo = false; _G.NoClip = false; _G.InfiniteEnergy = false
+
+-- Interface Construction
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "SolaraUltimateHub"
+ScreenGui.Name = "SolaraAllInOneHub"
 ScreenGui.Parent = game.CoreGui
 ScreenGui.ResetOnSpawn = false
 
--- Global Script State Variables (All default to safe, inactive settings)
-_G.AutoFarm = false; _G.AutoNewWorld = false; _G.AutoMastery = false; _G.AutoBone = false; _G.AutoCandy = false; _G.FastAttack = false; _G.BringMob = false
-_G.AutoBoss = false; _G.AutoAllBosses = false; _G.AutoSaber = false; _G.AutoPole = false; _G.AutoRengoku = false; _G.AutoYama = false; _G.AutoCDK = false; _G.AutoSoulGuitar = false
-_G.AutoRaid = false; _G.AutoLaw = false; _G.AutoAwaken = false; _G.AutoGodhuman = false; _G.AutoKen = false; _G.AutoBuso = false
-_G.FruitSniper = false; _G.AutoBringFruit = false; _G.AutoStoreFruit = false; _G.FruitRandom = false
-_G.BeliFarm = false; _G.ServerHop = false; _G.Rejoin = false
-_G.PlayerESP = false; _G.ChestESP = false; _G.FruitESP = false; _G.FlowerESP = false
-_G.WalkSpeed = 16; _G.JumpPower = 50; _G.InfiniteGeppo = false; _G.NoClip = false; _G.InfiniteEnergy = false
-
--- Main UI Frame Window
+-- Base Window Frame
 local MainFrame = Instance.new("Frame")
-MainFrame.Size = UDim2.new(0, 360, 0, 450)
+MainFrame.Name = "MainFrame"
+MainFrame.Size = UDim2.new(0, 380, 0, 480)
 MainFrame.Position = UDim2.new(0.35, 0, 0.2, 0)
-MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 20)
+MainFrame.BackgroundColor3 = Color3.fromRGB(12, 12, 18)
 MainFrame.BorderSizePixel = 0
 MainFrame.Active = true
 MainFrame.Draggable = true
 MainFrame.Parent = ScreenGui
 
-local UICorner = Instance.new("UICorner")
-UICorner.CornerRadius = UDim.new(0, 10)
-UICorner.Parent = MainFrame
+local MainCorner = Instance.new("UICorner")
+MainCorner.CornerRadius = UDim.new(0, 12)
+MainCorner.Parent = MainFrame
 
--- Top Title Bar
-local TitleBar = Instance.new("TextLabel")
-TitleBar.Size = UDim2.new(1, 0, 0, 40)
-TitleBar.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
-TitleBar.Text = "🤖 OPTIMISED SOLARA SCRIPT HUB v2.0 🤖"
-TitleBar.TextColor3 = Color3.fromRGB(255, 255, 255)
-TitleBar.TextSize = 14
-TitleBar.Font = Enum.Font.SourceSansBold
-TitleBar.Parent = MainFrame
+-- Premium Header Bar Layout
+local Header = Instance.new("Frame")
+Header.Name = "Header"
+Header.Size = UDim2.new(1, 0, 0, 45)
+Header.BackgroundColor3 = Color3.fromRGB(22, 22, 30)
+Header.BorderSizePixel = 0
+Header.Parent = MainFrame
 
-local TitleCorner = Instance.new("UICorner")
-TitleCorner.CornerRadius = UDim.new(0, 10)
-TitleCorner.Parent = TitleBar
+local HeaderCorner = Instance.new("UICorner")
+HeaderCorner.CornerRadius = UDim.new(0, 12)
+HeaderCorner.Parent = Header
 
--- Minimize / Expand Toggle Button
-local MiniButton = Instance.new("TextButton")
-MiniButton.Size = UDim2.new(0, 30, 0, 30)
-MiniButton.Position = UDim2.new(1, -35, 0, 5)
-MiniButton.BackgroundColor3 = Color3.fromRGB(45, 45, 55)
-MiniButton.Text = "-"
-MiniButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-MiniButton.TextSize = 18
-MiniButton.Font = Enum.Font.SourceSansBold
-MiniButton.Parent = MainFrame
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(0.7, 0, 1, 0)
+Title.Position = UDim2.new(0, 15, 0, 0)
+Title.BackgroundTransparency = 1
+Title.Text = "SOLARA BLOX FRUITS ALL-IN-ONE"
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.TextSize = 14
+Title.Font = Enum.Font.SourceSansBold
+Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.Parent = Header
+
+-- Minimize / Maximize Structural Toggle
+local MiniBtn = Instance.new("TextButton")
+MiniBtn.Size = UDim2.new(0, 30, 0, 30)
+MiniBtn.Position = UDim2.new(1, -40, 0, 7)
+MiniBtn.BackgroundColor3 = Color3.fromRGB(32, 32, 45)
+MiniBtn.Text = "-"
+MiniBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+MiniBtn.TextSize = 16
+MiniBtn.Font = Enum.Font.SourceSansBold
+MiniBtn.Parent = Header
 
 local MiniCorner = Instance.new("UICorner")
 MiniCorner.CornerRadius = UDim.new(0, 6)
-MiniCorner.Parent = MiniButton
+MiniCorner.Parent = MiniBtn
 
--- Scrolling Body Content Frame
+-- Scrolling Component Container
 local Scroll = Instance.new("ScrollingFrame")
-Scroll.Size = UDim2.new(1, -20, 1, -55)
-Scroll.Position = UDim2.new(0, 10, 0, 45)
+Scroll.Name = "ScrollArea"
+Scroll.Size = UDim2.new(1, -20, 1, -60)
+Scroll.Position = UDim2.new(0, 10, 0, 55)
 Scroll.BackgroundTransparency = 1
-Scroll.CanvasSize = UDim2.new(0, 0, 0, 1950)
+Scroll.CanvasSize = UDim2.new(0, 0, 0, 2300) -- Generous height allocations for all menu modules
 Scroll.ScrollBarThickness = 6
+Scroll.ScrollBarImageColor3 = Color3.fromRGB(45, 45, 60)
 Scroll.Parent = MainFrame
 
-local UIListLayout = Instance.new("UIListLayout")
-UIListLayout.Parent = Scroll
-UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-UIListLayout.Padding = UDim.new(0, 6)
+local Layout = Instance.new("UIListLayout")
+Layout.Parent = Scroll
+Layout.SortOrder = Enum.SortOrder.LayoutOrder
+Layout.Padding = UDim.new(0, 6)
 
--- Universal Category Label Generator
-local function CreateHeader(text)
-    local H = Instance.new("TextLabel")
-    H.Size = UDim2.new(1, -10, 0, 25)
-    H.BackgroundTransparency = 1
-    H.Text = "--- " .. string.upper(text) .. " ---"
-    H.TextColor3 = Color3.fromRGB(255, 200, 50)
-    H.TextSize = 13
-    H.Font = Enum.Font.SourceSansBold
-    H.Parent = Scroll
+-- Custom Category Sub-header Generator
+local function AddCategoryHeader(titleText)
+    local HLabel = Instance.new("TextLabel")
+    HLabel.Size = UDim2.new(1, -10, 0, 30)
+    HLabel.BackgroundTransparency = 1
+    HLabel.Text = "─── " .. string.upper(titleText) .. " ───"
+    HLabel.TextColor3 = Color3.fromRGB(0, 180, 255)
+    HLabel.TextSize = 12
+    HLabel.Font = Enum.Font.SourceSansBold
+    HLabel.Parent = Scroll
 end
 
--- Universal Interactive Toggle Button Generator
-local function CreateToggle(text, globalVarName, callback)
-    local B = Instance.new("TextButton")
-    B.Size = UDim2.new(1, -10, 0, 38)
-    B.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
-    B.Text = text .. " [OFF]"
-    B.TextColor3 = Color3.fromRGB(255, 120, 120)
-    B.TextSize = 13
-    B.Font = Enum.Font.SourceSansSemibold
-    B.Parent = Scroll
+-- Premium Toggle Creation Engine (Dynamic Verification State)
+local function AddFeatureToggle(labelName, targetGlobalVar)
+    local TButton = Instance.new("TextButton")
+    TButton.Size = UDim2.new(1, -10, 0, 38)
+    TButton.BackgroundColor3 = Color3.fromRGB(24, 24, 32)
+    TButton.Text = "  " .. labelName .. " : [OFF]"
+    TButton.TextColor3 = Color3.fromRGB(240, 90, 90)
+    TButton.TextSize = 13
+    TButton.Font = Enum.Font.SourceSansSemibold
+    TButton.TextXAlignment = Enum.TextXAlignment.Left
+    TButton.Parent = Scroll
 
-    local BC = Instance.new("UICorner")
-    BC.CornerRadius = UDim.new(0, 5)
-    BC.Parent = B
+    local TCorner = Instance.new("UICorner")
+    TCorner.CornerRadius = UDim.new(0, 6)
+    TCorner.Parent = TButton
 
-    B.MouseButton1Click:Connect(function()
-        _G[globalVarName] = not _G[globalVarName]
-        if _G[globalVarName] then
-            B.BackgroundColor3 = Color3.fromRGB(45, 75, 45)
-            B.TextColor3 = Color3.fromRGB(120, 255, 120)
-            B.Text = text .. " [ON]"
+    TButton.MouseButton1Click:Connect(function()
+        _G[targetGlobalVar] = not _G[targetGlobalVar]
+        if _G[targetGlobalVar] then
+            TButton.BackgroundColor3 = Color3.fromRGB(34, 60, 34)
+            TButton.TextColor3 = Color3.fromRGB(100, 240, 100)
+            TButton.Text = "  " .. labelName .. " : [ON]"
         else
-            B.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
-            B.TextColor3 = Color3.fromRGB(255, 120, 120)
-            B.Text = text .. " [OFF]"
+            TButton.BackgroundColor3 = Color3.fromRGB(24, 24, 32)
+            TButton.TextColor3 = Color3.fromRGB(240, 90, 90)
+            TButton.Text = "  " .. labelName .. " : [OFF]"
         end
-        if callback then callback(_G[globalVarName]) end
     end)
 end
 
--- Universal Text Input Box for Character Speed / Jump Settings
-local function CreateInputBox(placeholderText, globalVarName)
-    local Container = Instance.new("Frame")
-    Container.Size = UDim2.new(1, -10, 0, 40)
-    Container.BackgroundTransparency = 1
-    Container.Parent = Scroll
+-- Value Modification Input Field Construction
+local function AddValueSliderInput(labelText, targetGlobalVar)
+    local Panel = Instance.new("Frame")
+    Panel.Size = UDim2.new(1, -10, 0, 40)
+    Panel.BackgroundTransparency = 1
+    Panel.Parent = Scroll
 
-    local Label = Instance.new("TextLabel")
-    Label.Size = UDim2.new(0.5, 0, 1, 0)
-    Label.BackgroundTransparency = 1
-    Label.Text = placeholderText .. ":"
-    Label.TextColor3 = Color3.fromRGB(220, 220, 220)
-    Label.TextXAlignment = Enum.TextXAlignment.Left
-    Label.TextSize = 13
-    Label.Font = Enum.Font.SourceSans
-    Label.Parent = Container
+    local PLabel = Instance.new("TextLabel")
+    PLabel.Size = UDim2.new(0.5, 0, 1, 0)
+    PLabel.BackgroundTransparency = 1
+    PLabel.Text = "  " .. labelText
+    PLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+    PLabel.TextSize = 13
+    PLabel.Font = Enum.Font.SourceSans
+    PLabel.TextXAlignment = Enum.TextXAlignment.Left
+    PLabel.Parent = Panel
 
-    local Box = Instance.new("TextBox")
-    Box.Size = UDim2.new(0.45, 0, 0.8, 0)
-    Box.Position = UDim2.new(0.55, 0, 0.1, 0)
-    Box.BackgroundColor3 = Color3.fromRGB(35, 35, 45)
-    Box.TextColor3 = Color3.fromRGB(255, 255, 255)
-    Box.Text = tostring(_G[globalVarName])
-    Box.TextSize = 13
-    Box.Font = Enum.Font.SourceSansBold
-    Box.Parent = Container
+    local PBox = Instance.new("TextBox")
+    PBox.Size = UDim2.new(0.4, 0, 0.8, 0)
+    PBox.Position = UDim2.new(0.6, 0, 0.1, 0)
+    PBox.BackgroundColor3 = Color3.fromRGB(24, 24, 32)
+    PBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+    PBox.Text = tostring(_G[targetGlobalVar])
+    PBox.TextSize = 13
+    PBox.Font = Enum.Font.SourceSansBold
+    PBox.Parent = Panel
 
-    local BoxCorner = Instance.new("UICorner")
-    BoxCorner.CornerRadius = UDim.new(0, 4)
-    BoxCorner.Parent = Box
+    local PBoxCorner = Instance.new("UICorner")
+    PBoxCorner.CornerRadius = UDim.new(0, 4)
+    PBoxCorner.Parent = PBox
 
-    Box.FocusLost:Connect(function(enterPressed)
-        local val = tonumber(Box.Text)
-        if val then _G[globalVarName] = val else Box.Text = tostring(_G[globalVarName]) end
+    PBox.FocusLost:Connect(function()
+        local convertedNum = tonumber(PBox.Text)
+        if convertedNum then
+            _G[targetGlobalVar] = convertedNum
+        else
+            PBox.Text = tostring(_G[targetGlobalVar])
+        end
     end)
 end
 
 -- ========================================================================================
--- GENERATING ALL USER DEFINED CATEGORIES & CONTROLS
+--                     BUILDING INTERFACE MODULES ELEMENT BY ELEMENT
 -- ========================================================================================
 
-CreateHeader("Local Character Modifications")
-CreateInputBox("Custom Walk Speed Value", "WalkSpeed")
-CreateInputBox("Custom Jump Power Value", "JumpPower")
-CreateToggle("Infinite Geppo (Skywalk)", "InfiniteGeppo")
-CreateToggle("No Clip (Walk Through Walls)", "NoClip")
-CreateToggle("Infinite Energy Safeguard", "InfiniteEnergy")
+-- Section 1: Level & Mastery Farming
+AddCategoryHeader("Level & Mastery Farming")
+AddFeatureToggle("Auto-Farm Level", "AutoFarmLevel")
+AddFeatureToggle("Auto-New World Progression", "AutoNewWorld")
+AddFeatureToggle("Auto-Mastery (Fruit/Sword/Gun)", "AutoMastery")
+AddFeatureToggle("Auto-Bone Farm", "AutoBoneFarm")
+AddFeatureToggle("Auto-Candy Farm", "AutoCandyFarm")
+AddFeatureToggle("Fast Attack Speed (No Cooldown)", "FastAttack")
+AddFeatureToggle("Bring Mobs (Gather Enemies)", "BringMob")
 
-CreateHeader("Level & Mastery Farming")
-CreateToggle("Auto-Farm Level Quests", "AutoFarm")
-CreateToggle("Auto-Unlock New Worlds (Sea 2/3)", "AutoNewWorld")
-CreateToggle("Auto-Mastery Weapon Skill Grind", "AutoMastery")
-CreateToggle("Auto-Bone Skeleton Farmer", "AutoBone")
-CreateToggle("Auto-Candy Event Item Collector", "AutoCandy")
-CreateToggle("Fast Attack Combat Override", "FastAttack")
-CreateToggle("Bring Mobs Hostile Gathering", "BringMob")
+-- Section 2: Boss & Weapon Automation
+AddCategoryHeader("Boss & Weapon Automation")
+AddFeatureToggle("Auto-Boss Selected Tracking", "AutoBoss")
+AddFeatureToggle("Auto-All Bosses Rotation Loop", "AutoAllBosses")
+AddFeatureToggle("Auto-Saber Puzzle Quest", "AutoSaber")
+AddFeatureToggle("Auto-Pole Weapon Farm", "AutoPole")
+AddFeatureToggle("Auto-Rengoku Key & Chest", "AutoRengoku")
+AddFeatureToggle("Auto-Yama / Tushita Elite Quest", "AutoYamaTushita")
+AddFeatureToggle("Auto-Cursed Dual Katana", "AutoCDK")
+AddFeatureToggle("Auto-Soul Guitar Crafting", "AutoSoulGuitar")
+AddFeatureToggle("Auto-Hard Quests & Legendary Finds", "AutoHardQuests")
 
-CreateHeader("Boss & Weapon Automation")
-CreateToggle("Auto-Boss Selected Tracking", "AutoBoss")
-CreateToggle("Auto-All World Boss Rotation", "AutoAllBosses")
-CreateToggle("Auto-Saber Legendary Sword Puzzle", "AutoSaber")
-CreateToggle("Auto-Pole Thunder God Grind", "AutoPole")
-CreateToggle("Auto-Rengoku Key & Chest Farmer", "AutoRengoku")
-CreateToggle("Auto-Yama / Tushita Elite Trials", "AutoYama")
-CreateToggle("Auto-Cursed Dual Katana Grind", "AutoCDK")
-CreateToggle("Auto-Soul Guitar Crafting Underworld", "AutoSoulGuitar")
+-- Section 3: Raids & Combat Style Features
+AddCategoryHeader("Raids & Combat Styles")
+AddFeatureToggle("Auto-Raid Clearing Loop", "AutoRaid")
+AddFeatureToggle("Auto-Law Raid Farm", "AutoLawRaid")
+AddFeatureToggle("Auto-Awaken Skills Allocation", "AutoAwaken")
+AddFeatureToggle("Auto-Superhuman / Godhuman Unlock", "AutoGodhuman")
+AddFeatureToggle("Auto-Ken Haki Dodge Mastery", "AutoKenHaki")
+AddFeatureToggle("Auto-Buso Haki Armour Leveler", "AutoBusoHaki")
 
-CreateHeader("Raids & Fighting Styles")
-CreateToggle("Auto-Raid Chip & Clear Engine", "AutoRaid")
-CreateToggle("Auto-Law Order Boss Dungeon", "AutoLaw")
-CreateToggle("Auto-Awaken Skill Awakening Store", "AutoAwaken")
-CreateToggle("Auto-Godhuman / Superhuman Unlock", "AutoGodhuman")
-CreateToggle("Auto-Ken Observation Haki Leveler", "AutoKen")
-CreateToggle("Auto-Buso Enhancement Haki Leveler", "AutoBuso")
+-- Section 4: Fruit Manipulation
+AddCategoryHeader("Fruit Manipulation")
+AddFeatureToggle("Fruit Sniper Shop Watcher", "FruitSniper")
+AddFeatureToggle("Auto-Bring Map Spawned Fruits", "AutoBringFruit")
+AddFeatureToggle("Auto-Store Fruits In Inventory", "AutoStoreFruit")
+AddFeatureToggle("Fruit Random Gacha Purchase Loop", "FruitRandom")
 
-CreateHeader("Fruit Manipulation Engine")
-CreateToggle("Fruit Sniper Instant Restock Merchant", "FruitSniper")
-CreateToggle("Auto-Bring Map Spawned Fruits", "AutoBringFruit")
-CreateToggle("Auto-Store Fruits In Inventory", "AutoStoreFruit")
-CreateToggle("Fruit Random Gacha Purchase Loop", "FruitRandom")
-
-CreateHeader("Teleports & World Hubs")
-CreateToggle("Beli Chest Teleport Loop Farm", "BeliFarm")
-CreateToggle("Server Hop Safe Lobby Shuffle", "ServerHop")
-CreateToggle("Instant Rejoin Last Playground", "Rejoin")
-
-CreateHeader("Visuals & Extra Sensory Tracking")
-CreateToggle("Player ESP Skeleton Frames", "PlayerESP")
-CreateToggle("Chest ESP Boundary Boxes", "ChestESP")
-CreateToggle("Spawned Fruit ESP Trackers", "FruitESP")
-CreateToggle("Race Flower ESP Blue/Red/Yellow", "FlowerESP")
-
--- ========================================================================================
--- WINDOW UI WINDOW TOGGLE INTERACTION (MINIMIZE LOGIC)
--- ========================================================================================
-local IsMinimized = false
-MiniButton.MouseButton1Click:Connect(function()
-    IsMinimized = not IsMinimized
-    if IsMinimized then
-        Scroll.Visible = false
-        MainFrame:TweenSize(UDim2.new(0, 360, 0, 40), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, 0.3, true)
-        MiniButton.Text = "+"
-    else
-        MainFrame:TweenSize(UDim2.new(0, 360, 0, 450), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, 0.3, true, function()
-            Scroll.Visible = true
-        end)
-        MiniButton.Text = "-"
-    end
-end)
-
--- ========================================================================================
--- ACTIVE EXECUTION BACKGROUND MECHANICAL ENGINES
--- ========================================================================================
-local Players = game:GetService("Players")
-local LP = Players.LocalPlayer-- Character State Engine Loopgame:GetService("RunService").RenderStepped:Connect(function()pcall(function()local C = LP.Characterif C and C:FindFirstChild("Humanoid") thenC.Humanoid.WalkSpeed = _G.WalkSpeedC.Humanoid.JumpPower = _G.JumpPowerif _G.InfiniteEnergy and C:FindFirstChild("Energy") then C.Energy.Value = C.Energy.MaxValue endif _G.NoClip thenfor _, p in pairs(C:GetChildren()) do if p:IsA("BasePart") then p.CanCollide = false end endendendend)end)-- Infinite Geppo Engine Hookgame:GetService("UserInputService").JumpRequest:Connect(function()pcall(function()if _G.InfiniteGeppo thenlocal Hum = LP.Character and LP.Character:FindFirstChild("Humanoid")if Hum then Hum:ChangeState(Enum.HumanoidStateType.Jumping) endendend)end)-- Fast Attack Action Thread Looptask.spawn(function()while task.wait() doif _G.FastAttack thenpcall(function()local t = LP.Character:FindFirstChildOfClass("Tool")if t and t:FindFirstChild("Click") then t.Click:FireServer() endend)endendend)-- Treasure Beli Collector Looptask.spawn(function()while task.wait(0.5) doif _G.BeliFarm thenpcall(function()for _, c in pairs(workspace:GetChildren()) doif string.find(c.Name, "Chest") and c:FindFirstChild("TouchInterest") thenLP.Character.HumanoidRootPart.CFrame = c.CFrametask.wait(0.2)endendend)endendend)print("[✓] Corrected Solara Script Hub Initialised. Ready to run.")
+-- Section 5: Teleports & World Utilities
+AddCategoryHeader("Teleports & World Utilities")
+AddFeatureToggle("Teleport to Specified Islands", "TeleportIslands")
+AddFeatureToggle("Teleport to Active Server Players", "TeleportPlayers")
+AddFeatureToggle("Beli Farm (Chest Teleport Loop)", "BeliFarm")
+AddFeatureToggle("Instant Server Hop Lobby Shuffle", "ServerHop")AddFeatureToggle("Force Rejoin Active Playground", "RejoinServer")-- Section 6: Visuals & ESP Tracking ChannelsAddCategoryHeader("Visuals & ESP Tracking")AddFeatureToggle("Player ESP Active Skeleton Frames", "PlayerESP")AddFeatureToggle("Chest ESP Boundary Target Boxes", "ChestESP")AddFeatureToggle("Spawned Fruit ESP Tracking Node", "FruitESP")AddFeatureToggle("Race Flower ESP Node (Blue/Red/Yellow)", "FlowerESP")-- Section 7: Local Character ModificationsAddCategoryHeader("Local Character Modifications")AddValueSliderInput("Custom WalkSpeed Value Setting", "WalkSpeedValue")AddValueSliderInput("Custom JumpPower Value Setting", "JumpPowerValue")AddFeatureToggle("Infinite Geppo (Unbounded Skyjump)", "InfiniteGeppo")AddFeatureToggle("No Clip (Disable World Collision)", "NoClip")AddFeatureToggle("Infinite Energy Full Power Guard", "InfiniteEnergy")-- ========================================================================================-- WINDOW RESIZING INTERACTION CONTROLLER (MINIMIZE PROCESS)-- ========================================================================================local WindowStateMinimized = falseMiniBtn.MouseButton1Click:Connect(function()WindowStateMinimized = not WindowStateMinimizedif WindowStateMinimized thenScroll.Visible = falseMainFrame:TweenSize(UDim2.new(0, 380, 0, 45), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, 0.25, true)MiniBtn.Text = "+"elseMainFrame:TweenSize(UDim2.new(0, 380, 0, 480), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, 0.25, true, function()Scroll.Visible = trueend)MiniBtn.Text = "-"endend)-- ========================================================================================--               BACKGROUND PERFORMANCE ENGINE THREADS (LOGIC CORES)-- ========================================================================================-- Character Attributes & State Sync LoopRunService.RenderStepped:Connect(function()pcall(function()local Char = LocalPlayer.Characterif Char and Char:FindFirstChild("Humanoid") then-- Live injection processing for physical constraintsChar.Humanoid.WalkSpeed = _G.WalkSpeedValueChar.Humanoid.JumpPower = _G.JumpPowerValueif _G.InfiniteEnergy and Char:FindFirstChild("Energy") thenChar.Energy.Value = Char.Energy.MaxValueendif _G.NoClip thenfor _, Element in pairs(Char:GetChildren()) doif Element:IsA("BasePart") then Element.CanCollide = false endendendendend)end)-- Infinite Geppo Structural Connection HookUserInputService.JumpRequest:Connect(function()pcall(function()if _G.InfiniteGeppo thenlocal HumStatus = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid")if HumStatus then HumStatus:ChangeState(Enum.HumanoidStateType.Jumping) endendend)end)-- Combat Speed Modifier Thread Executiontask.spawn(function()while task.wait() doif _G.FastAttack thenpcall(function()local ActiveTool = LocalPlayer.Character:FindFirstChildOfClass("Tool")if ActiveTool and ActiveTool:FindFirstChild("Click") thenActiveTool.Click:FireServer()endend)endendend)-- Beli Teleport Gold Accumulator Coretask.spawn(function()while task.wait(0.4) doif _G.BeliFarm thenpcall(function()for _, Node in pairs(workspace:GetChildren()) doif string.find(Node.Name, "Chest") and Node:FindFirstChild("TouchInterest") thenLocalPlayer.Character.HumanoidRootPart.CFrame = Node.CFrametask.wait(0.18)endendend)endendend)-- Automated Natural Fruit Teleport Magnet Enginetask.spawn(function()while task.wait(2) doif _G.AutoBringFruit thenpcall(function()for _, Object in pairs(workspace:GetChildren()) doif Object:IsA("Tool") and string.find(Object.Name, "Fruit") thenLocalPlayer.Character.HumanoidRootPart.CFrame = Object.Handle.CFrametask.wait(0.5)endendend)endendend)-- Rejoin Handler Interface Trigger Enginetask.spawn(function()while task.wait(3) doif _G.RejoinServer thenpcall(function()game:GetService("TeleportService"):Teleport(game.PlaceId, LocalPlayer)end)endendend)print("[✓] ALL CHOSEN SECTIONS INITIALIZED SUCCESSFULLY IN THE GUI HUB.")
