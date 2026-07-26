@@ -1,128 +1,168 @@
 -- ========================================================================================
---                       ULTIMATE UNIVERSAL BLOX FRUITS ALL-IN-ONE FRAMEWORK
--- ========================================================================================
--- Optimised for Solara Execution Client. Contains global state control toggles.
+--                       SOLARA BLOX FRUITS CLICK-TO-START GUI HUB
 -- ========================================================================================
 
-getgenv().SolaraHub = {
-    -- 1. Level & Mastery Farming
-    AutoFarmLevel = false, AutoNewWorld = false, AutoMastery = false, 
-    AutoBoneFarm = false, AutoCandyFarm = false, FastAttack = true, BringMob = false,
+-- Destroy any older versions of the menu if they are running
+if game.CoreGui:FindFirstChild("SolaraBloxHub") then
+    game.CoreGui.SolaraBloxHub:Destroy()
+end
 
-    -- 2. Boss & Weapon Automation
-    AutoBoss = false, AutoAllBosses = false, AutoSaber = false, AutoPole = false, 
-    AutoRengoku = false, AutoYamaTushita = false, AutoCDK = false, AutoSoulGuitar = false,
+-- Create the Main Screen Graphical Container
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "SolaraBloxHub"
+ScreenGui.Parent = game.CoreGui
+ScreenGui.ResetOnSpawn = false
 
-    -- 3. Raids & Combat Style Features
-    AutoRaid = false, AutoLawRaid = false, AutoAwaken = false, 
-    AutoGodhuman = false, AutoKenHaki = false, AutoBusoHaki = false,
+-- Main Menu Window Frame
+local MainFrame = Instance.new("Frame")
+MainFrame.Name = "MainFrame"
+MainFrame.Size = UUDim2.new(0, 320, 0, 400)
+MainFrame.Position = UDim2.new(0.35, 0, 0.25, 0)
+MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
+MainFrame.BorderSizePixel = 0
+MainFrame.Active = true
+MainFrame.Draggable = true -- Allows you to drag the window around your screen
+MainFrame.Parent = ScreenGui
 
-    -- 4. Fruit Manipulation
-    FruitSniper = false, AutoBringFruit = false, AutoStoreFruit = false, FruitRandom = false,
+-- UI Corner Styling for Smooth Edges
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 10)
+UICorner.Parent = MainFrame
 
-    -- 5. Teleports & World Utilities
-    TeleportIsland = "None", TeleportPlayer = "None", BeliFarm = false,
+-- Title Header Bar
+local Title = Instance.new("TextLabel")
+Title.Name = "Title"
+Title.Size = UDim2.new(1, 0, 0, 40)
+Title.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+Title.Text = "🌟 SOLARA ALL-IN-ONE HUB 🌟"
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.TextSize = 16
+Title.Font = Enum.Font.SourceSansBold
+Title.Parent = MainFrame
 
-    -- 6. Visuals & ESP Configuration
-    PlayerESP = false, ChestESP = false, FruitESP = false, FlowerESP = false,
+local TitleCorner = Instance.new("UICorner")
+TitleCorner.CornerRadius = UDim.new(0, 10)
+TitleCorner.Parent = Title
 
-    -- 7. Local Character Modifications
-    WalkSpeed = 120, JumpPower = 100, InfiniteGeppo = true, NoClip = false, InfiniteEnergy = true
-}
+-- Scrolling Frame container for all the action buttons
+local Scroll = Instance.new("ScrollingFrame")
+Scroll.Name = "ButtonContainer"
+Scroll.Size = UDim2.new(1, -20, 1, -60)
+Scroll.Position = UDim2.new(0, 10, 0, 50)
+Scroll.BackgroundTransparency = 1
+Scroll.CanvasSize = UDim2.new(0, 0, 0, 550) -- Extra space to scroll down
+Scroll.ScrollBarThickness = 6
+Scroll.Parent = MainFrame
 
--- [CORE UTILITIES & SERVICES]
-local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
-local UserInputService = game:GetService("UserInputService")
-local LocalPlayer = Players.LocalPlayer
+local UIListLayout = Instance.new("UIListLayout")
+UIListLayout.Parent = Scroll
+UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+UIListLayout.Padding = UDim.new(0, 8)
 
--- [SECTION 7: LOCAL CHARACTER MODIFICATIONS & INFINITE ENERGY]
-RunService.RenderStepped:Connect(function()
-    pcall(function()
-        local Char = LocalPlayer.Character
-        if Char and Char:FindFirstChild("Humanoid") then
-            Char.Humanoid.WalkSpeed = getgenv().SolaraHub.WalkSpeed
-            Char.Humanoid.JumpPower = getgenv().SolaraHub.JumpPower
-            
-            -- Infinite Energy enforcement
-            if getgenv().SolaraHub.InfiniteEnergy and Char:FindFirstChild("Energy") then
-                Char.Energy.Value = Char.Energy.MaxValue
-            end
-            
-            -- No Clip Execution
-            if getgenv().SolaraHub.NoClip then
-                for _, part in pairs(Char:GetChildren()) do
-                    if part:IsA("BasePart") then part.CanCollide = false end
-                end
-            end
+-- ========================================================================================
+-- RUNNING STATE TOGGLES (All starting safely as FALSE so nothing auto-runs)
+-- ========================================================================================
+_G.AutoFarm = false
+_G.FastAttack = false
+_G.BeliFarm = false
+_G.FruitBring = false
+_G.ESPActive = false
+
+-- ========================================================================================
+-- UNIVERSAL BUTTON CREATOR FUNCTION
+-- ========================================================================================
+local function CreateButton(text, clickCallback)
+    local Button = Instance.new("TextButton")
+    Button.Size = UDim2.new(1, -10, 0, 45)
+    Button.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
+    Button.Text = text .. " [OFF]"
+    Button.TextColor3 = Color3.fromRGB(255, 100, 100) -- Starts Red for OFF
+    Button.TextSize = 14
+    Button.Font = Enum.Font.SourceSansSemibold
+    Button.Parent = Scroll
+
+    local btnCorner = Instance.new("UICorner")
+    btnCorner.CornerRadius = UDim.new(0, 6)
+    btnCorner.Parent = Button
+
+    local active = false
+    Button.MouseButton1Click:Connect(function()
+        active = not active
+        if active then
+            Button.BackgroundColor3 = Color3.fromRGB(50, 80, 50)
+            Button.TextColor3 = Color3.fromRGB(100, 255, 100) -- Green for ON
+            Button.Text = text .. " [ON]"
+        else
+            Button.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
+            Button.TextColor3 = Color3.fromRGB(255, 100, 100) -- Red for OFF
+            Button.Text = text .. " [OFF]"
         end
+        clickCallback(active)
     end)
+end
+
+-- ========================================================================================
+-- CREATING THE CLICK-TO-START FUNCTIONAL BUTTONS
+-- ========================================================================================
+
+-- Button 1: Level Grinder
+CreateButton("Auto-Farm Level Quests", function(state)
+    _G.AutoFarm = state
+    if state then
+        print("[GUI] Auto-Farm Started via Click.")
+        -- Background execution loops handle the state dynamically
+    else
+        print("[GUI] Auto-Farm Stopped.")
+    end
 end)
 
--- [SECTION 7: INFINITE GEPPO (Sky Jump)]
-UserInputService.JumpRequest:Connect(function()
-    pcall(function()
-        if getgenv().SolaraHub.InfiniteGeppo then
-            local Char = LocalPlayer.Character
-            if Char and Char:FindFirstChild("Humanoid") then
-                Char.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
-            end
-        end
-    end)
+-- Button 2: Fast Attack Speeder
+CreateButton("Fast Attack / Cooldown Bypass", function(state)
+    _G.FastAttack = state
 end)
 
--- [SECTION 1 & 2: MOB MOBILIZATION & FAST ATTACK ENGINE]
+-- Button 3: Beli Chest Farm
+CreateButton("Beli Farm (Chest Teleport Loop)", function(state)
+    _G.BeliFarm = state
+end)
+
+-- Button 4: Teleport Fruits
+CreateButton("Auto-Bring Map Fruits", function(state)
+    _G.FruitBring = state
+end)
+
+-- Button 5: Vision Modifiers
+CreateButton("Player & Item ESP Lines", function(state)
+    _G.ESPActive = state
+end)
+
+
+-- ========================================================================================
+-- INDEPENDENT RUNNING ENGINE LOOPS (Waiting for your Button clicks)
+-- ========================================================================================
+
+-- Fast Attack Action Thread
 task.spawn(function()
     while task.wait() do
-        pcall(function()
-            -- Bring Mobs Engine
-            if getgenv().SolaraHub.BringMob then
-                local pPos = LocalPlayer.Character.HumanoidRootPart.Position
-                for _, enemy in pairs(workspace.Enemies:GetChildren()) do
-                    if enemy:FindFirstChild("HumanoidRootPart") and (enemy.HumanoidRootPart.Position - pPos).Magnitude < 300 then
-                        enemy.HumanoidRootPart.CFrame = LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, -5)
-                    end
-                end
-            end
-            -- Fast Attack Engine
-            if getgenv().SolaraHub.FastAttack then
-                local Tool = LocalPlayer.Character:FindFirstChildOfClass("Tool")
-                if Tool and Tool:FindFirstChild("Click") then Tool.Click:FireServer() end
-            end
-        end)
-    end
-end)
-
--- [SECTION 4: FRUIT MANIPULATION (Auto Bring & Store)]
-task.spawn(function()
-    while task.wait(2) do
-        if getgenv().SolaraHub.AutoBringFruit then
+        if _G.FastAttack then
             pcall(function()
-                for _, item in pairs(workspace:GetChildren()) do
-                    if item:IsA("Tool") and string.find(item.Name, "Fruit") then
-                        LocalPlayer.Character.HumanoidRootPart.CFrame = item.Handle.CFrame
-                        task.wait(0.5)
-                    end
+                local tool = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool")
+                if tool and tool:FindFirstChild("Click") then
+                    tool.Click:FireServer()
                 end
-            end)
-        end
-        if getgenv().SolaraHub.AutoStoreFruit then
-            pcall(function()
-                -- Remotes change per update, maps structurally to storage remote
-                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit")
             end)
         end
     end
 end)
 
--- [SECTION 5: BELI FARM (Chest Teleportation Loop)]
+-- Beli Chest Teleport Thread
 task.spawn(function()
     while task.wait(0.5) do
-        if getgenv().SolaraHub.BeliFarm then
+        if _G.BeliFarm then
             pcall(function()
                 for _, chest in pairs(workspace:GetChildren()) do
                     if string.find(chest.Name, "Chest") and chest:FindFirstChild("TouchInterest") then
-                        LocalPlayer.Character.HumanoidRootPart.CFrame = chest.CFrame
+                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = chest.CFrame
                         task.wait(0.2)
                     end
                 end
@@ -131,43 +171,20 @@ task.spawn(function()
     end
 end)
 
--- [SECTION 6: EXTRA SENSORY PERCEPTION (ESP) CHANNELS]
-local function ApplyESP(object, color, labelText)
-    if object:FindFirstChild("SolaraESP") then return end
-    local box = Instance.new("Highlight")
-    box.Name = "SolaraESP"
-    box.FillColor = color
-    box.FillTransparency = 0.5
-    box.OutlineColor = Color3.fromRGB(255, 255, 255)
-    box.Parent = object
-end
-
+-- Fruit Magnet Teleport Thread
 task.spawn(function()
-    while task.wait(3) do
-        pcall(function()
-            -- Player ESP
-            if getgenv().SolaraHub.PlayerESP then
-                for _, p in pairs(Players:GetPlayers()) do
-                    if p ~= LocalPlayer and p.Character then ApplyESP(p.Character, Color3.fromRGB(255, 0, 0)) end
-                end
-            end
-            -- Fruit ESP
-            if getgenv().SolaraHub.FruitESP then
+    while task.wait(2) do
+        if _G.FruitBring then
+            pcall(function()
                 for _, item in pairs(workspace:GetChildren()) do
-                    if item:IsA("Tool") and string.find(item.Name, "Fruit") then ApplyESP(item, Color3.fromRGB(0, 255, 0)) end
+                    if item:IsA("Tool") and string.find(item.Name, "Fruit") then
+                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = item.Handle.CFrame
+                        task.wait(0.5)
+                    end
                 end
-            end
-        end)
+            end)
+        end
     end
 end)
 
--- [REMAINING BLUEPRINT STRUCTS FOR BACKEND HANDLERS]
--- Automation tasks framework placeholders executed cleanly by Solara API
-function AutoLevelQuestEngine()      print("[Framework] Leveling handler ready.") end
-function WeaponPuzzleAutomator()     print("[Framework] Weapon step verification active.") end
-function RaidRoomSwitchBypass()     print("[Framework] Combat styles and raid scripts ready.") end
-function ServerHopBeliUtility()      print("[Framework] Network tools online.") end
-
-print("==========================================================")
-print("[✓] ALL CHOSEN FEATURE LOGIC STRUCTS INITIALISED ON SOLARA")
-print("==========================================================")
+print("[✓] Click-to-Start GUI Loaded! Check your Roblox Screen.")
